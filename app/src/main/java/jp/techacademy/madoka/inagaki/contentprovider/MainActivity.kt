@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,17 +41,16 @@ class MainActivity : AppCompatActivity() {
 
         //cursorはデータベース上の検索結果を格納するもの。
         //最初にtofirts,次からはtonext。データがあればtrue無ければfalseを返す
-        if (cursor!!.moveToFirst()){
-            do{
-                //今cursorがさしているデータの、画像idがセットされている位置を取得
-                val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-                //その位置をgetLongで取得
-                val id = cursor.getLong(fieldIndex)
-                //uriを取得してログに出力
-                val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,id)
+        if (cursor!!.moveToFirst()) {
+            //今cursorがさしているデータの、画像idがセットされている位置を取得
+            val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
+            //その位置をgetLongで取得
+            val id = cursor.getLong(fieldIndex)
+            //uriを取得してログに出力
+            val imageUri =
+                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
-                Log.d("test","URI : "+ imageUri.toString())
-            }while (cursor.moveToNext())
+            imageView.setImageURI(imageUri)
         }
         //データがなくfalseが返ったらifには入らずこっちのcloseへ来る
         cursor.close()
